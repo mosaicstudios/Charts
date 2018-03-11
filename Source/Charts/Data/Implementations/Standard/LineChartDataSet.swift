@@ -120,6 +120,8 @@ open class LineChartDataSet: LineRadarChartDataSet, ILineChartDataSet
     /// If true, drawing circles is enabled
     open var drawCirclesEnabled = true
     
+    open var drawGradientEnabled = false
+
     /// - returns: `true` if drawing circles for this DataSet is enabled, `false` ifnot
     open var isDrawCirclesEnabled: Bool { return drawCirclesEnabled }
     
@@ -140,6 +142,8 @@ open class LineChartDataSet: LineRadarChartDataSet, ILineChartDataSet
     /// [1, 3, 4, 2] will paint [-   ----  -   ----  ]
     open var lineDashLengths: [CGFloat]?
     
+    open var gradientPositions = [CGFloat]()
+
     /// Line cap type, default is CGLineCap.Butt
     open var lineCapType = CGLineCap.butt
     
@@ -159,6 +163,25 @@ open class LineChartDataSet: LineRadarChartDataSet, ILineChartDataSet
         }
     }
     
+    public func resetGradientPositions()
+    {
+        gradientPositions.removeAll(keepingCapacity: false)
+    }
+
+    public func addGradientPositions(position: CGFloat)
+    {
+        gradientPositions.append(position)
+    }
+    
+    public func gradientPositionAt(index: Int) -> CGFloat
+    {
+        if (index < 0)
+        {
+            return gradientPositions[0 % gradientPositions.count]
+        }
+        return gradientPositions[index % gradientPositions.count]
+    }
+    
     // MARK: NSCopying
     
     open override func copyWithZone(_ zone: NSZone?) -> AnyObject
@@ -172,6 +195,7 @@ open class LineChartDataSet: LineRadarChartDataSet, ILineChartDataSet
         copy.lineCapType = lineCapType
         copy.drawCirclesEnabled = drawCirclesEnabled
         copy.drawCircleHoleEnabled = drawCircleHoleEnabled
+        copy.drawGradientEnabled = drawGradientEnabled
         copy.mode = mode
         return copy
     }
